@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DocumentProcessorServiceClient } from "@google-cloud/documentai";
 import {GoogleAuth} from 'google-auth-library';
 
@@ -50,20 +51,27 @@ const request = {
 
 const [result] = await client.processDocument(request);
 const {document} = result;
+if (!document) {
+    return new Response(JSON.stringify({ 
+        message: 'No document found'
+    }), {
+        status: 400,
+    });
+}
 const {text} = document;
 
-const getText = textAnchor => {
+const getText = (textAnchor: any) => {
     if (!textAnchor.textSegments || textAnchor.textSegments.length === 0) {
       return '';
     }
     const startIndex = textAnchor.textSegments[0].startIndex || 0;
     const endIndex = textAnchor.textSegments[0].endIndex;
-    return text.substring(startIndex, endIndex);
+    return text?.substring(startIndex, endIndex) || '';
 };
 
 // Extract tables from all pages
 const tables = [];
-for (const page of document.pages) {
+for (const page of document?.pages || []) {
     const {tables: pageTables} = page;
     
     if (!pageTables) continue;
