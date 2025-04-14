@@ -17,27 +17,13 @@ export default function Home() {
           if (!response.ok) {
             throw new Error("Upload failed");
           }
-
-          alert("File uploaded successfully!");
         } catch (error) {
           console.error("Error:", error);
-          alert("Failed to upload file");
         }
       }}
     >
-      <input
-        type="file"
-        name="pdfFile"
-        accept=".pdf"
-        required
-        className="border border-gray-300 rounded p-2"
-      />
-      <button
-        type="submit"
-        className="rounded-full bg-foreground text-background px-4 py-2 hover:bg-[#383838] dark:hover:bg-[#ccc]"
-      >
-        Upload PDF
-      </button>
+      <input type="file" name="pdfFile" accept=".pdf" required />
+      <button type="submit">Upload PDF</button>
     </form>
   );
 }
