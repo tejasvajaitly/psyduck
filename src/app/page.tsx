@@ -1,9 +1,47 @@
+"use client";
 import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            
+            try {
+              const response = await fetch('/api/extract', {
+                method: 'POST',
+                body: formData,
+              });
+              
+              if (!response.ok) {
+                throw new Error('Upload failed');
+              }
+              
+              alert('File uploaded successfully!');
+            } catch (error) {
+              console.error('Error:', error);
+              alert('Failed to upload file');
+            }
+          }}
+        >
+          <input
+            type="file"
+            name="pdfFile"
+            accept=".pdf"
+            required
+            className="border border-gray-300 rounded p-2"
+          />
+          <button
+            type="submit"
+            className="rounded-full bg-foreground text-background px-4 py-2 hover:bg-[#383838] dark:hover:bg-[#ccc]"
+          >
+            Upload PDF
+          </button>
+        </form>
         <Image
           className="dark:invert"
           src="/next.svg"
