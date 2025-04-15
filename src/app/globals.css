@@ -45,10 +45,11 @@
 
 body {
   font-family: var(--font-source-code-pro);
+  padding: 1.5rem;
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 1.5rem;
   --background: oklch(0.98 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
