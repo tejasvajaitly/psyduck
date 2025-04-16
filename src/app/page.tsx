@@ -2,40 +2,34 @@
 
 import { useState } from "react";
 import Transactions from "./transactions";
+import { useMutation } from "@tanstack/react-query";
 
 export default function Home() {
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const mutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const response = await fetch("/api/extract", {
+        method: "POST",
+        body: formData,
+      });
+      return response.json();
+    },
+  });
   return (
     <>
       <form
-        className="flex flex-col gap-4"
         onSubmit={async (e) => {
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
-
-          try {
-            const response = await fetch("/api/extract", {
-              method: "POST",
-              body: formData,
-            });
-
-            if (!response.ok) {
-              throw new Error("Upload failed");
-            }
-
-            const data = await response.json();
-
-            setTransactions(data.structuredDocument.transactions);
-          } catch (error) {
-            console.error("Error:", error);
-          }
+          mutation.mutate(formData);
         }}
       >
         <input type="file" name="pdfFile" accept=".pdf" required />
         <button type="submit">Upload PDF</button>
       </form>
-      {transactions.length > 0 ? (
-        <Transactions transactions={transactions} />
+      {mutation.data ? (
+        <Transactions
+          transactions={mutation.data.structuredDocument.transactions}
+        />
       ) : null}
     </>
   );
