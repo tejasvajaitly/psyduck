@@ -49,7 +49,7 @@ export default function Transactions({
           </TableHeader>
           <TableBody>
             {transactions.map((transaction) => (
-              <TableRow key={transaction.date}>
+              <TableRow key={transaction.description + transaction.amount}>
                 <TableCell className="font-medium">
                   {transaction.date}
                 </TableCell>
