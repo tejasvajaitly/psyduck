@@ -72,10 +72,17 @@ export const decision = async (str: string) => {
     model: openai("o4-mini"),
     temperature: 1,
     schema: z.object({
-      loanDecision: z.enum(["approved", "rejected"]),
-      internalReasons: z.array(z.string()),
-      customerFacingAdvice: z.array(z.string()),
-      approvalSummary: z.union([z.array(z.string()), z.null()]),
+      loanDecision: z.union([
+        z.enum(["approved", "rejected"]),
+        z.null(),
+        z.undefined(),
+      ]),
+      internalReasons: z.union([z.array(z.string()), z.null(), z.undefined()]),
+      customerFacingAdvice: z.union([
+        z.array(z.string()),
+        z.null(),
+        z.undefined(),
+      ]),
     }),
     prompt: `You are a highly experienced financial underwriter with expert-level understanding of banking algorithms and risk models used to assess business loan eligibility. You are reviewing this parsed bank statement ${str} data for a customer who has applied for a business loan.
     Use this data to make a decision on whether this customer should be approved or rejected for a loan. Your decision should be based on key financial indicators such as:
@@ -90,7 +97,6 @@ export const decision = async (str: string) => {
       1.	loanDecision: "approved" or "rejected"
       2.	internalReasons: List of internal reasons for approval/rejection (for internal team only). Be detailed, analytical, and direct.
       3.	customerFacingAdvice: List of tips or actionable suggestions for the customer (in a polite, positive tone). Only needed when the loan is rejected. Avoid sounding negative or overly technical. Focus on helpfulness and hope.
-      4.	approvalSummary: Only when approved. Explain clearly why this customer was approved (for internal and customer use).
       
     If rejected it should look like this:
       {
@@ -104,8 +110,7 @@ export const decision = async (str: string) => {
           "Reduce discretionary expenses like dining and shopping to improve your savings rate.",
           "Try to bring down monthly debt payments by consolidating or paying off smaller loans.",
           "Maintain a steady positive cash flow for the next 3-6 months to strengthen your application."
-        ],
-        "approvalSummary": null
+        ]
       }
 
     If approved it should look like this:
@@ -117,10 +122,6 @@ export const decision = async (str: string) => {
           "Savings balance provides sufficient financial cushion."
         ],
         "customerFacingAdvice": [],
-        "approvalSummary": [
-          "Your stable cash flow and responsible financial behavior make you a strong loan candidate.",
-          "You’ve maintained a healthy balance between earnings, expenses, and savings."
-        ]
       }
   `,
   });

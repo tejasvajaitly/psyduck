@@ -26,11 +26,11 @@ export default function Home() {
         <input type="file" name="pdfFile" accept=".pdf" required />
         <button type="submit">Upload PDF</button>
       </form>
-      {mutation.data ? (
+      {/* {mutation.data ? (
         <Transactions
-          transactions={mutation.data.structuredDocument.transactions}
+          transactions={mutation?.data?.structuredDocument?.transactions}
         />
-      ) : null}
+      ) : null} */}
     </>
   );
 }

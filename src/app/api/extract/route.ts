@@ -10,6 +10,7 @@ import {
 } from "./analyze-document";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
+import { generateEmbeddings } from "./embedding";
 
 export async function POST(req: Request) {
   try {
@@ -28,12 +29,39 @@ export async function POST(req: Request) {
     const finalDecision = await decision(tableString || "");
     const supabase = createServerSupabaseClient();
 
-    const { data, error } = await supabase.from("runs").insert({
-      account_number: metadata.accountNumber,
-      name: metadata.name,
-      transactions: structuredDocument,
-      final_decision: finalDecision,
-    });
+    const { data, error } = await supabase
+      .from("runs")
+      .insert({
+        account_number: metadata.accountNumber,
+        name: metadata.name,
+        transactions: structuredDocument,
+
+        extracted_string: tableString,
+      })
+      .select();
+
+    if (error || !data) {
+      return Response.json({ message: "Error inserting run" }, { status: 500 });
+    }
+
+    const embeddings = await generateEmbeddings(tableString || "");
+
+    const { data: embeddingsData, error: embeddingsError } = await supabase
+      .from("embeddings")
+      .insert(
+        embeddings.map((embedding) => ({
+          run_id: data[0].id,
+          embedding: embedding.embedding,
+          chunk_text: embedding.chunk_text,
+        }))
+      );
+
+    if (embeddingsError) {
+      return Response.json(
+        { message: "Error inserting embeddings" },
+        { status: 500 }
+      );
+    }
 
     return Response.json({
       tables,
@@ -41,6 +69,7 @@ export async function POST(req: Request) {
       metadata,
       structuredDocument,
       finalDecision: finalDecision,
+      tableString: tableString,
     });
   } catch (error) {
     console.error(error);
