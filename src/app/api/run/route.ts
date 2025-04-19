@@ -1,18 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
 
-export const findRelevantContent = async (
-  userQuery: string,
-  run_id: string
-) => {
-  const supabaseClient = createServerSupabaseClient();
-  const { data, error } = await supabaseClient
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
     .from("runs")
     .select("*")
-    .eq("id", run_id);
-
-  return data;
-};
+    .eq("id", id)
+    .single();
+  return Response.json(data);
+}
 
 export function createServerSupabaseClient() {
   return createClient(

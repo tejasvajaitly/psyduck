@@ -1,10 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import Transactions from "./transactions";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+type Run = {
+  id: string;
+  user_id: string;
+  created_at: string;
+  structured_document: string;
+  account_number: string;
+  name: string;
+  extracted_string: string;
+  transactions: {
+    date: string;
+    type: string;
+    amount: string;
+    description: string;
+  }[];
+};
 
 export default function Home() {
+  const { data: runs, isLoading } = useQuery({
+    queryKey: ["transactions"],
+    queryFn: async (): Promise<Run[]> => {
+      const response = await fetch("/api/runs");
+      return response.json();
+    },
+  });
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
       const response = await fetch("/api/extract", {
@@ -14,23 +35,18 @@ export default function Home() {
       return response.json();
     },
   });
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          const formData = new FormData(e.currentTarget);
-          mutation.mutate(formData);
-        }}
-      >
-        <input type="file" name="pdfFile" accept=".pdf" required />
-        <button type="submit">Upload PDF</button>
-      </form>
-      {/* {mutation.data ? (
-        <Transactions
-          transactions={mutation?.data?.structuredDocument?.transactions}
-        />
-      ) : null} */}
+      <div>
+        {runs?.map((run) => (
+          <Link href={`/run/${run.id}`} key={run.id}>
+            <div key={run.id}>{run.id}</div>
+          </Link>
+        ))}
+      </div>
     </>
   );
 }

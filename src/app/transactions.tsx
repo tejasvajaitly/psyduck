@@ -48,7 +48,7 @@ export default function Transactions({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {transactions.map((transaction) => (
+            {transactions?.map((transaction) => (
               <TableRow key={transaction.description + transaction.amount}>
                 <TableCell className="font-medium">
                   {transaction.date}
