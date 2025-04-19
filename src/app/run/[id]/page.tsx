@@ -2,7 +2,6 @@
 import Transactions from "@/app/transactions";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import UploadStatement from "@/app/upload-statement";
 function Page() {
   const params = useParams<{ id: string }>();
   const { data, isLoading } = useQuery({
@@ -21,7 +20,6 @@ function Page() {
   console.log("data", data);
   return (
     <div>
-      <UploadStatement mutate={mutation.mutate} />
       <Transactions transactions={data?.transactions?.transactions} />
     </div>
   );

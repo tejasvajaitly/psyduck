@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import Transactions from "./transactions";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import UploadStatement from "./upload-statement";
 import Link from "next/link";
 type Run = {
   id: string;
@@ -40,6 +43,8 @@ export default function Home() {
   }
   return (
     <>
+      <UploadStatement mutate={mutation.mutate} />
+
       <div>
         {runs?.map((run) => (
           <Link href={`/run/${run.id}`} key={run.id}>

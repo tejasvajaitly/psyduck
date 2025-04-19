@@ -10,6 +10,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import Providers from "./providers";
+import Image from "next/image";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +44,8 @@ export default function RootLayout({
           <body
             className={`${geistSans.variable} ${geistMono.variable} ${sourceCodePro.variable} antialiased`}
           >
-            <header>
+            <header className="flex items-center justify-between">
+              <Image src="/psyduck.svg" alt="psyduck" width={25} height={25} />
               <SignedOut>
                 <SignInButton />
                 <SignUpButton />
