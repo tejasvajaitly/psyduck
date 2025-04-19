@@ -7,6 +7,7 @@ import {
   analyzeDocument,
   structureDocument,
   decision,
+  extractMetricsFromDecision,
 } from "./analyze-document";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
@@ -26,6 +27,7 @@ export async function POST(req: Request) {
     const metadata = await analyzeDocument(document.text || "");
     const structuredDocument = await structureDocument(tableString || "");
     const finalDecision = await decision(tableString || "");
+    const financialMetrics = await extractMetricsFromDecision(finalDecision);
     const supabase = createServerSupabaseClient();
 
     const { data, error } = await supabase
@@ -34,8 +36,9 @@ export async function POST(req: Request) {
         account_number: metadata.accountNumber,
         name: metadata.name,
         transactions: structuredDocument,
-
+        final_decision: finalDecision,
         extracted_string: tableString,
+        financial_metrics: financialMetrics,
       })
       .select();
 
@@ -50,6 +53,7 @@ export async function POST(req: Request) {
       structuredDocument,
       finalDecision: finalDecision,
       tableString: tableString,
+      financial_metrics: financialMetrics,
     });
   } catch (error) {
     console.error(error);

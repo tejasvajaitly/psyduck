@@ -5,6 +5,8 @@ import Transactions from "./transactions";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import UploadStatement from "./upload-statement";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LoanApprovalList } from "./loan-approval-list";
 type Run = {
   id: string;
   user_id: string;
@@ -13,6 +15,17 @@ type Run = {
   account_number: string;
   name: string;
   extracted_string: string;
+  final_decision: {
+    loanDecision: "approved" | "rejected" | null | undefined;
+    internalReasons: string[] | null | undefined;
+    customerFacingAdvice: string[] | null | undefined;
+  };
+  financial_metrics: {
+    label: string;
+    value: string;
+    color: string;
+    description: string;
+  }[];
   transactions: {
     date: string;
     type: string;
@@ -46,11 +59,7 @@ export default function Home() {
       <UploadStatement mutate={mutation.mutate} />
 
       <div>
-        {runs?.map((run) => (
-          <Link href={`/run/${run.id}`} key={run.id}>
-            <div key={run.id}>{run.id}</div>
-          </Link>
-        ))}
+        <LoanApprovalList runs={runs} />
       </div>
     </>
   );

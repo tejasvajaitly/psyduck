@@ -128,3 +128,58 @@ export const decision = async (str: string) => {
 
   return object;
 };
+
+interface MetricColors {
+  danger: string;
+  warning: string;
+  fair: string;
+  good: string;
+}
+
+// Just for reference, not enforced
+const SUGGESTED_COLORS = {
+  critical: "#FF4444", // Rich red
+  negative: "#FF6B6B", // Soft red
+  warning: "#FFA500", // Deep orange
+  caution: "#FFD700", // Golden yellow
+  neutral: "#4CAF50", // Forest green
+  positive: "#2ECC71", // Emerald green
+  excellent: "#00FF00", // Bright green
+};
+
+export const extractMetricsFromDecision = async (decisionSummary: any) => {
+  const { object } = await generateObject({
+    model: openai("gpt-4.1-nano"),
+    schema: z.object({
+      metrics: z.array(
+        z.object({
+          label: z.string(),
+          value: z.any(),
+          color: z.string(),
+          description: z.string().optional(),
+        })
+      ),
+    }),
+    prompt: `Analyze this loan decision summary and extract meaningful metrics that would be important to display. Be creative and thorough in finding data points that tell the financial story.
+
+    Decision data: ${JSON.stringify(decisionSummary)}
+
+    For each metric:
+    - Extract any numerical values, percentages, or important textual indicators
+    - Assign an appropriate color that reflects the metric's health (you can use any color, but consider red tones for concerning metrics, yellow/orange for cautionary ones, and green tones for positive ones)
+    - Add a brief description if the metric needs additional context
+    - You can use the following colors: ${JSON.stringify(SUGGESTED_COLORS)}
+    
+    Example metrics could include (but are not limited to):
+    - Cash flow trends
+    - Debt ratios
+    - Balance indicators
+    - Risk factors
+    - Spending patterns
+    - Any other meaningful financial indicators found in the summary
+
+    Feel free to be creative with both the metrics you extract and how you present them. The goal is to highlight the most important financial insights from the summary.`,
+  });
+
+  return object;
+};
