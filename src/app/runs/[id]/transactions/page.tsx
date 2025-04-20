@@ -19,8 +19,13 @@ function Page() {
   });
   console.log("data", data);
   return (
-    <div>
-      <Transactions transactions={data?.transactions?.transactions} />
+    <div className="pt-10">
+      <Transactions
+        transactions={data?.transactions?.transactions}
+        name={data?.name}
+        accountNumber={data?.account_number}
+        runId={data?.id}
+      />
     </div>
   );
 }

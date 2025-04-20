@@ -54,7 +54,7 @@ export const structureDocument = async (str: string) => {
               "The amount of the transaction on the statement, return null if not found"
             ),
           type: z
-            .enum(["debit", "credit", ""])
+            .string()
             .nullable()
             .optional()
             .describe("The type of the transaction, return null if not found"),
@@ -129,24 +129,6 @@ export const decision = async (str: string) => {
   return object;
 };
 
-interface MetricColors {
-  danger: string;
-  warning: string;
-  fair: string;
-  good: string;
-}
-
-// Just for reference, not enforced
-const SUGGESTED_COLORS = {
-  critical: "#FF4444", // Rich red
-  negative: "#FF6B6B", // Soft red
-  warning: "#FFA500", // Deep orange
-  caution: "#FFD700", // Golden yellow
-  neutral: "#4CAF50", // Forest green
-  positive: "#2ECC71", // Emerald green
-  excellent: "#00FF00", // Bright green
-};
-
 export const extractMetricsFromDecision = async (decisionSummary: any) => {
   const { object } = await generateObject({
     model: openai("gpt-4.1-nano"),
@@ -155,7 +137,7 @@ export const extractMetricsFromDecision = async (decisionSummary: any) => {
         z.object({
           label: z.string(),
           value: z.any(),
-          color: z.string(),
+          colorTheme: z.string(),
           description: z.string().optional(),
         })
       ),
@@ -166,9 +148,8 @@ export const extractMetricsFromDecision = async (decisionSummary: any) => {
 
     For each metric:
     - Extract any numerical values, percentages, or important textual indicators
-    - Assign an appropriate color that reflects the metric's health (you can use any color, but consider red tones for concerning metrics, yellow/orange for cautionary ones, and green tones for positive ones)
+    - Assign an appropriate color theme that reflects the metric's health, use only one the of three (danger, warning, good) and if unsure use none.
     - Add a brief description if the metric needs additional context
-    - You can use the following colors: ${JSON.stringify(SUGGESTED_COLORS)}
     
     Example metrics could include (but are not limited to):
     - Cash flow trends
