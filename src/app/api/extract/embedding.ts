@@ -11,6 +11,8 @@ export const findRelevantContent = async (
     .select("*")
     .eq("id", run_id);
 
+  console.log(data, error);
+
   return data;
 };
 

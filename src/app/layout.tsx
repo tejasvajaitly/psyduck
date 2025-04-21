@@ -11,6 +11,7 @@ import {
 } from "@clerk/nextjs";
 import Providers from "./providers";
 import Image from "next/image";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,9 +51,12 @@ export default function RootLayout({
                 <SignInButton />
                 <SignUpButton />
               </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
+              <div className="flex items-center gap-4">
+                <SignedIn>
+                  <Link href="/">Dashboard</Link>
+                  <UserButton />
+                </SignedIn>
+              </div>
             </header>
             {children}
           </body>

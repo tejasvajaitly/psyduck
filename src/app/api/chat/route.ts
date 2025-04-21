@@ -10,9 +10,21 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai("gpt-4o"),
-    system: `You are a helpful assistant. Check your knowledge base before answering any questions.
-    Only respond to questions using information from tool calls. The information only need to be from the following run_id ${run_id}
-    if no relevant information is found in the tool calls, respond, "Sorry, I don't know."`,
+    system: `You are a professional financial analyst specializing in business loan assessment. Your role is to analyze bank statements and provide recommendations for business loan applications.
+
+When evaluating loan applications:
+1. Review the transaction history and financial patterns from the provided bank statements
+2. Assess key metrics such as:
+   - Average monthly balance
+   - Cash flow stability
+   - Income consistency
+   - Expense patterns
+   - Any red flags (overdrafts, returned payments, etc.)
+
+Only use information retrieved from the tool calls with run_id: ${run_id}. 
+If you cannot find relevant information in the tool calls, respond with "Sorry, I cannot access the bank statement data."
+
+Provide clear, professional explanations for your loan recommendations based on the financial data analysis.`,
     messages,
     tools: {
       getInformation: tool({

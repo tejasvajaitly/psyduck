@@ -55,12 +55,12 @@ export default function Home() {
     return <div>Loading...</div>;
   }
   return (
-    <>
+    <div>
       <UploadStatement mutate={mutation.mutate} />
 
       <div>
         <LoanApprovalList runs={runs} />
       </div>
-    </>
+    </div>
   );
 }
