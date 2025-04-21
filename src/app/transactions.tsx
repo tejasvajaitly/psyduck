@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FileText } from "lucide-react";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
+import { MoveUpRight, MoveDownRight } from "lucide-react";
 
 type Transaction = {
   date: string;
@@ -74,8 +75,7 @@ export default function Transactions({
             <TableRow>
               <TableHead className="w-[100px]">Date</TableHead>
               <TableHead>Description</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead className="text-right">Type</TableHead>
+              <TableHead className="text-right">Amount</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -87,8 +87,24 @@ export default function Transactions({
                 <TableCell className="truncate max-w-[200px]">
                   {transaction.description}
                 </TableCell>
-                <TableCell>{transaction.amount}</TableCell>
-                <TableCell className="text-right">{transaction.type}</TableCell>
+                <TableCell className="text-right">
+                  <span className="flex items-center justify-end gap-1">
+                    <span
+                      className={
+                        transaction.type.toLowerCase() === "credit"
+                          ? "text-emerald-500"
+                          : "text-red-500"
+                      }
+                    >
+                      {transaction.amount}
+                    </span>
+                    {transaction.type.toLowerCase() === "credit" ? (
+                      <MoveUpRight className="h-2 w-2 text-emerald-500" />
+                    ) : (
+                      <MoveDownRight className="h-2 w-2 text-red-500" />
+                    )}
+                  </span>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

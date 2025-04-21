@@ -47,6 +47,7 @@ export async function POST(req: Request) {
     }
 
     return Response.json({
+      id: data[0].id,
       tables,
       text: document.text,
       metadata,

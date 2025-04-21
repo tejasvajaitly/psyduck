@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import Transactions from "./transactions";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import UploadStatement from "./upload-statement";
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { FileBarChart } from "lucide-react";
 import { LoanApprovalList } from "./loan-approval-list";
+import Link from "next/link";
 type Run = {
   id: string;
   user_id: string;
@@ -42,25 +39,17 @@ export default function Home() {
       return response.json();
     },
   });
-  const mutation = useMutation({
-    mutationFn: async (formData: FormData) => {
-      const response = await fetch("/api/extract", {
-        method: "POST",
-        body: formData,
-      });
-      return response.json();
-    },
-  });
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
   return (
-    <div>
-      <UploadStatement mutate={mutation.mutate} />
-
-      <div>
-        <LoanApprovalList runs={runs} />
+    <div className="my-10">
+      <div className="py-10 flex items-center gap-2">
+        <FileBarChart className="h-4 w-4" />
+        <Link href="/analyze">Analyze bank statement</Link>
       </div>
+      <LoanApprovalList runs={runs} />
     </div>
   );
 }
