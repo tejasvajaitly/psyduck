@@ -91,14 +91,14 @@ export default function Transactions({
                   <span className="flex items-center justify-end gap-1">
                     <span
                       className={
-                        transaction.type.toLowerCase() === "credit"
+                        transaction?.type?.toLowerCase() === "credit"
                           ? "text-emerald-500"
                           : "text-red-500"
                       }
                     >
                       {transaction.amount}
                     </span>
-                    {transaction.type.toLowerCase() === "credit" ? (
+                    {transaction?.type?.toLowerCase() === "credit" ? (
                       <MoveUpRight className="h-2 w-2 text-emerald-500" />
                     ) : (
                       <MoveDownRight className="h-2 w-2 text-red-500" />
