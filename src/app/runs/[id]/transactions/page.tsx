@@ -1,6 +1,7 @@
 "use client";
-import Transactions from "@/app/transactions";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import Transactions from "@/app/dashboard/transactions";
+import { useQuery } from "@tanstack/react-query";
+import { Spinner } from "@/components/ui/spinner";
 import { useParams } from "next/navigation";
 function Page() {
   const params = useParams<{ id: string }>();
@@ -8,16 +9,15 @@ function Page() {
     queryKey: ["run"],
     queryFn: () => fetch(`/api/run?id=${params.id}`).then((res) => res.json()),
   });
-  const mutation = useMutation({
-    mutationFn: async (formData: FormData) => {
-      const response = await fetch("/api/extract", {
-        method: "POST",
-        body: formData,
-      });
-      return response.json();
-    },
-  });
-  console.log("data", data);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <div className="pt-10">
       <Transactions

@@ -7,6 +7,7 @@ import { MetricCard } from "./metric-card";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { ListFilter } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 
 function Page() {
   const params = useParams<{ id: string }>();
@@ -18,7 +19,11 @@ function Page() {
   console.log("data", data);
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    );
   }
 
   return (

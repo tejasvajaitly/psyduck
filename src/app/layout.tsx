@@ -12,6 +12,7 @@ import {
 import Providers from "./providers";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,13 +48,19 @@ export default function RootLayout({
           >
             <header className="flex items-center justify-between">
               <Image src="/psyduck.svg" alt="psyduck" width={25} height={25} />
-              <SignedOut>
-                <SignInButton />
-                <SignUpButton />
-              </SignedOut>
               <div className="flex items-center gap-4">
+                <SignedOut>
+                  <SignInButton>
+                    <Button className="cursor-pointer">Login</Button>
+                  </SignInButton>
+                  <SignUpButton>
+                    <Button variant="ghost" className="cursor-pointer">
+                      Sign Up
+                    </Button>
+                  </SignUpButton>
+                </SignedOut>
                 <SignedIn>
-                  <Link href="/">Dashboard</Link>
+                  <Link href="/dashboard">Dashboard</Link>
                   <UserButton />
                 </SignedIn>
               </div>
