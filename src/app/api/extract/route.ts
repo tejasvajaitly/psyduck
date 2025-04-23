@@ -65,7 +65,7 @@ export async function POST(req: Request) {
   }
 }
 
-export function createServerSupabaseClient() {
+function createServerSupabaseClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
