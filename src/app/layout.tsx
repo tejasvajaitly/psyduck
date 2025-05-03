@@ -13,6 +13,7 @@ import Providers from "./providers";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -66,6 +67,7 @@ export default function RootLayout({
               </div>
             </header>
             {children}
+            <Toaster richColors />
           </body>
         </html>
       </Providers>

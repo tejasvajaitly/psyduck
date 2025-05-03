@@ -5,6 +5,8 @@ import { FileBarChart, Sparkles } from "lucide-react";
 import { LoanApprovalList } from "./loan-approval-list";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/spinner";
+import { useUser } from "@clerk/nextjs";
+
 type Run = {
   id: string;
   user_id: string;
@@ -33,11 +35,21 @@ type Run = {
 };
 
 export default function Home() {
-  const { data: runs, isLoading } = useQuery({
+  const { user } = useUser();
+  console.log("Current user:", user?.id);
+
+  const {
+    data: runs,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["transactions"],
     queryFn: async (): Promise<Run[]> => {
+      console.log("Fetching runs...");
       const response = await fetch("/api/runs");
-      return response.json();
+      const data = await response.json();
+      console.log("Fetched runs:", data);
+      return data;
     },
   });
 
@@ -48,6 +60,12 @@ export default function Home() {
       </div>
     );
   }
+
+  if (error) {
+    console.error("Error fetching runs:", error);
+    return <div>Error loading runs</div>;
+  }
+
   return (
     <div className="my-10">
       <div className="py-10 flex items-center gap-2">

@@ -81,7 +81,7 @@ export const convertTablesToString = (tables: any[]): string => {
     .join("\n---\n");
 };
 
-export const processDocument = async (file: File) => {
+export const processDocument = async (file: Response) => {
   const client = initializeDocumentClient();
   const name = `projects/${CONFIG.projectId}/locations/${CONFIG.location}/processors/${CONFIG.processorId}`;
 
